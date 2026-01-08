@@ -28,32 +28,6 @@ func littleEndianBytes<T: FixedWidthInteger>(_ value: T) -> [UInt8] {
     Swift.withUnsafeBytes(of: value.littleEndian) { Array($0) }
 }
 
-func allClose<T: Numeric>(
-    _ lhs: [T],
-    _ rhs: [T],
-    absoluteTolerance: T.Magnitude = T.Magnitude.ulpOfOne.squareRoot()
-        * T.Magnitude.leastNormalMagnitude,
-    relativeTolerance: T.Magnitude = T.Magnitude.ulpOfOne.squareRoot()
-) -> Bool where T.Magnitude: FloatingPoint {
-    guard lhs.count == rhs.count else {
-        Issue.record("Sizes differ: \(lhs.count) vs. \(rhs.count)")
-        return false
-    }
-    for (l, r) in zip(lhs, rhs) {
-        guard
-            l.isApproximatelyEqual(
-                to: r,
-                absoluteTolerance: absoluteTolerance,
-                relativeTolerance: relativeTolerance
-            )
-        else {
-            Issue.record("Expected \(lhs) to be approximately equal to \(rhs), but \(l) != \(r)")
-            return false
-        }
-    }
-    return true
-}
-
 func isClose(_ lhs: GGUF.MetadataValue, _ rhs: GGUF.MetadataValue) -> Bool {
     switch (lhs, rhs) {
     case (.uint8(let lvalue), .uint8(let rvalue)):

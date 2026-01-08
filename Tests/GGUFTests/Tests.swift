@@ -1,5 +1,6 @@
 import BinaryParsing
 import Foundation
+import TestData
 import Testing
 
 @testable import GGUF
@@ -194,14 +195,7 @@ import Testing
 }
 
 @Test func `tensor header and metadata extraction with real file`() throws {
-    let testFileURL = try #require(
-        Bundle.module.url(
-            forResource: "small",
-            withExtension: "gguf",
-            subdirectory: "Resources"
-        )
-    )
-    let fileData = try Data(contentsOf: testFileURL)
+    let fileData = try #require(testData(named: "small", withExtension: "gguf"))
     let gguf = try GGUF(parsing: fileData)
 
     #expect(gguf.metadata.count == Int(gguf.header.metadataKeyValueCount))
@@ -211,14 +205,7 @@ import Testing
 }
 
 @Test func `tensor data extraction with real file`() throws {
-    let testFileURL = try #require(
-        Bundle.module.url(
-            forResource: "small",
-            withExtension: "gguf",
-            subdirectory: "Resources"
-        )
-    )
-    let fileData = try Data(contentsOf: testFileURL)
+    let fileData = try #require(testData(named: "small", withExtension: "gguf"))
     let gguf = try GGUF(parsing: fileData)
 
     let tensor1 = gguf.tensorInfos[0]

@@ -1,5 +1,4 @@
 import BinaryParsing
-import Foundation
 
 /// GGUF metadata value types
 extension GGUF {

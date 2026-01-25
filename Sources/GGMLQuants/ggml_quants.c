@@ -6,14 +6,19 @@
  * for use in external projects.
  */
 
-#include "ggml_dequantize.h"
+#include "ggml_quants.h"
 
 #include <string.h>
 #include <assert.h>
 
 // ============================================================================
-// Helper functions
+// Helper functions and lookup tables
 // ============================================================================
+
+// Lookup table for IQ4_NL (non-linear 4-bit quantization)
+static const int8_t kvalues_iq4nl[16] = {
+    -127, -104, -83, -65, -49, -35, -22, -10, 1, 13, 25, 38, 53, 69, 89, 113,
+};
 
 static inline void get_scale_min_k4(int j, const uint8_t * GGML_RESTRICT q, uint8_t * GGML_RESTRICT d, uint8_t * GGML_RESTRICT m) {
     if (j < 4) {
@@ -314,5 +319,25 @@ void dequantize_row_q8_K(const block_q8_K * GGML_RESTRICT x, float * GGML_RESTRI
         for (int j = 0; j < QK_K; ++j) {
             *y++ = x[i].d * x[i].qs[j];
         }
+    }
+}
+
+// ============================================================================
+// Dequantization functions - IQ types
+// ============================================================================
+
+void dequantize_row_iq4_nl(const block_iq4_nl * GGML_RESTRICT x, float * GGML_RESTRICT y, int64_t k) {
+    assert(k % QK4_NL == 0);
+    const int64_t nb = k / QK4_NL;
+
+    for (int i = 0; i < nb; i++) {
+        const uint8_t * qs = x[i].qs;
+        const float d = GGML_FP16_TO_FP32(x[i].d);
+        
+        for (int j = 0; j < QK4_NL/2; ++j) {
+            y[j +       0] = d * kvalues_iq4nl[qs[j] & 0xf];
+            y[j + QK4_NL/2] = d * kvalues_iq4nl[qs[j] >>  4];
+        }
+        y  += QK4_NL;
     }
 }

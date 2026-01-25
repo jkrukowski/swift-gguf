@@ -1,5 +1,4 @@
 import BinaryParsing
-import Foundation
 
 extension GGUF {
     public struct TensorInfo: Sendable {

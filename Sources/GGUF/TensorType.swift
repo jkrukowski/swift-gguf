@@ -1,5 +1,4 @@
 import BinaryParsing
-import Foundation
 
 extension GGUF {
     public enum TensorType: UInt32, Sendable {

@@ -1,6 +1,6 @@
 import BinaryParsing
-import Dequantize
 import Foundation
+import Quants
 
 public struct GGUF: Sendable {
     public let header: Header
@@ -104,7 +104,9 @@ public struct GGUF: Sendable {
             return Dequantize.Q6_K(data, elementCount: elementCount)
         case .q8_K:
             return Dequantize.Q8_K(data, elementCount: elementCount)
-        case .q8_1, .bf16, .iq2_XXS, .iq2_XS, .iq3_XXS, .iq1_S, .iq4_NL, .iq3_S, .iq2_S, .iq4_XS,
+        case .iq4_NL:
+            return Dequantize.IQ4_NL(data, elementCount: elementCount)
+        case .q8_1, .bf16, .iq2_XXS, .iq2_XS, .iq3_XXS, .iq1_S, .iq3_S, .iq2_S, .iq4_XS,
             .iq1_M, .tq1_0, .tq2_0, .mxfp4:
             throw Error.unsupportedTensorTypeForConversion(info.dataType)
         }

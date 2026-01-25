@@ -1,5 +1,4 @@
 import BinaryParsing
-import Foundation
 
 extension String {
     /// Parses a GGUF string: UInt64 length + UTF-8 data (no null terminator)

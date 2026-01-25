@@ -203,6 +203,13 @@ typedef struct {
     int8_t qs[QK8_1];  // quants
 } block_q8_1;
 
+// IQ4_NL quantization (4.25 bits per weight with non-linear values)
+// 32 weights per block
+typedef struct {
+    ggml_half d;
+    uint8_t qs[QK4_NL/2];
+} block_iq4_nl;
+
 // ============================================================================
 // K-quantization structures (super-block based, 256 weights per block)
 // ============================================================================
@@ -271,6 +278,8 @@ GGML_API void dequantize_row_q4_K(const block_q4_K * GGML_RESTRICT x, float * GG
 GGML_API void dequantize_row_q5_K(const block_q5_K * GGML_RESTRICT x, float * GGML_RESTRICT y, int64_t k);
 GGML_API void dequantize_row_q6_K(const block_q6_K * GGML_RESTRICT x, float * GGML_RESTRICT y, int64_t k);
 GGML_API void dequantize_row_q8_K(const block_q8_K * GGML_RESTRICT x, float * GGML_RESTRICT y, int64_t k);
+
+GGML_API void dequantize_row_iq4_nl(const block_iq4_nl * GGML_RESTRICT x, float * GGML_RESTRICT y, int64_t k);
 
 #ifdef __cplusplus
 }

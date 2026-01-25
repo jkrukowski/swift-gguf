@@ -1,5 +1,4 @@
 import BinaryParsing
-import Foundation
 
 extension GGUF {
     /// GGUF file header (24 bytes)

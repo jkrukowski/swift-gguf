@@ -1,7 +1,6 @@
 // swift-tools-version: 6.2
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
-import Foundation
 import PackageDescription
 
 let package = Package(
@@ -28,19 +27,19 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "GGMLDequantize",
+            name: "GGMLQuants",
             dependencies: []
         ),
         .target(
-            name: "Dequantize",
+            name: "Quants",
             dependencies: [
-                "GGMLDequantize"
+                "GGMLQuants"
             ]
         ),
         .target(
             name: "GGUF",
             dependencies: [
-                "Dequantize",
+                "Quants",
                 .product(name: "BinaryParsing", package: "swift-binary-parsing"),
             ]
         ),
@@ -54,9 +53,9 @@ let package = Package(
             ]
         ),
         .testTarget(
-            name: "DequantizeTests",
+            name: "QuantsTests",
             dependencies: [
-                "Dequantize",
+                "Quants",
                 "TestData",
                 .product(name: "Numerics", package: "swift-numerics"),
             ]
@@ -64,7 +63,7 @@ let package = Package(
         .testTarget(
             name: "GGUFTests",
             dependencies: [
-                "Dequantize",
+                "Quants",
                 "GGUF",
                 "TestData",
                 .product(name: "Numerics", package: "swift-numerics"),

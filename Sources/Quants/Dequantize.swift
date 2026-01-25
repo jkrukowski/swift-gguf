@@ -1,5 +1,5 @@
 import Foundation
-import GGMLDequantize
+import GGMLQuants
 
 public enum Dequantize {
 
@@ -130,6 +130,18 @@ public enum Dequantize {
             [Float](unsafeUninitializedCapacity: elementCount) { outputBuffer, finalCount in
                 let inputPtr = ptr.baseAddress?.assumingMemoryBound(to: block_q8_K.self)
                 dequantize_row_q8_K(inputPtr, outputBuffer.baseAddress, Int64(elementCount))
+                finalCount = elementCount
+            }
+        }
+    }
+
+    // MARK: - IQ4_NL
+
+    public static func IQ4_NL(_ data: Data, elementCount: Int) -> [Float] {
+        data.withUnsafeBytes { (ptr: UnsafeRawBufferPointer) in
+            [Float](unsafeUninitializedCapacity: elementCount) { outputBuffer, finalCount in
+                let inputPtr = ptr.baseAddress?.assumingMemoryBound(to: block_iq4_nl.self)
+                dequantize_row_iq4_nl(inputPtr, outputBuffer.baseAddress, Int64(elementCount))
                 finalCount = elementCount
             }
         }
